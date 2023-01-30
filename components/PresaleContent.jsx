@@ -16,16 +16,27 @@ export const PresaleContent = ({
     sold,
     bnbbal,
     busdbal,
+    usdtbal,
+    trxbal,
     error,
     trcbnb,
     trcbusd,
+    trcusdt,
+    trctrx,
     bnbusd,
+    trxusd,
     bnbtext,
     busdtext,
+    usdttext,
+    trxtext,
     bnbChange,
     busdChange,
+    usdtChange,
+    trxChange,
     buyTRCwithBNB,
     buyTRCwithBUSD,
+    buyTRCwithUSDT,
+    buyTRCwithTRX,
     txhash,
     remainingtokens,
 }) => {
@@ -33,7 +44,7 @@ export const PresaleContent = ({
         palette: {
             // type: "dark",
             primary: {
-                main: "rgba(255,61,38,0.5)",
+                main: "rgb(233, 209, 111)",
             },
             secondary: {
                 main: "rgba(238,45,15,0.1)",
@@ -62,6 +73,7 @@ export const PresaleContent = ({
                     elevation={24}
                     style={{
                         backgroundColor: "rgba(225, 217, 209,0.5)",
+                        // backgroundColor: "rgb(4, 30, 55)",
                         width: "100%",
                         padding: "20px",
                         margin: "20px",
@@ -84,9 +96,10 @@ export const PresaleContent = ({
                             ""
                         )}
                         <Grid item>Current BNB/USD Price: ${bnbusd}</Grid>
-                        <Grid item>Current TRX/USD Price: ${bnbusd}</Grid>
+                        <Grid item>Current TRX/USD Price: ${trxusd}</Grid>
                         <Grid item>
-                            Balance: {bnbbal} BNB / {busdbal} BUSD / {busdbal} USDT / {busdbal} TRX
+                            Balance: {bnbbal} BNB / {busdbal} BUSD / {usdtbal}{" "}
+                            USDT / {trxbal} TRX
                         </Grid>
                         <Grid item>0.06 USDT = 1 TRC</Grid>
                     </Grid>
@@ -175,6 +188,103 @@ export const PresaleContent = ({
                                     onClick={buyTRCwithBUSD}
                                 >
                                     Buy with BUSD
+                                </Button>
+                            </Grid>
+                        </Grid>
+                        <Grid
+                            container
+                            item
+                            xs={12}
+                            spacing={2}
+                            justify="center"
+                            alignItems="center"
+                        ></Grid>
+                    </Grid>
+                    <Grid
+                        container
+                        direction="row"
+                        spacing={4}
+                        style={{ padding: "10px" }}
+                    >
+                        <Grid
+                            container
+                            item
+                            direction="column"
+                            md={6}
+                            spacing={3}
+                            justify="center"
+                            alignItems="center"
+                        >
+                            <Grid item>
+                                <Image
+                                    src="/usdt.png"
+                                    alt="USDT"
+                                    height="100"
+                                    width="100"
+                                />
+                            </Grid>
+                            <Grid item>{trcusdt} TRC</Grid>
+                            <Grid item>
+                                <TextField
+                                    id="outlined-number"
+                                    label="USDT"
+                                    type="number"
+                                    variant="outlined"
+                                    value={usdttext}
+                                    onChange={usdtChange}
+                                    InputLabelProps={{ shrink: true }}
+                                    name="usdttext"
+                                />
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    variant="contained"
+                                    size="large"
+                                    color="primary"
+                                    onClick={buyTRCwithUSDT}
+                                >
+                                    Buy with USDT
+                                </Button>
+                            </Grid>
+                        </Grid>
+                        <Grid
+                            container
+                            item
+                            direction="column"
+                            md={6}
+                            spacing={3}
+                            justify="center"
+                            alignItems="center"
+                        >
+                            <Grid item>
+                                <Image
+                                    src="/trx.png"
+                                    alt="TRX"
+                                    height="100"
+                                    width="100"
+                                />
+                            </Grid>
+                            <Grid item>{trctrx} TRC</Grid>
+                            <Grid item>
+                                <TextField
+                                    id="outlined-number"
+                                    label="TRX"
+                                    type="number"
+                                    variant="outlined"
+                                    value={trxtext}
+                                    onChange={trxChange}
+                                    InputLabelProps={{ shrink: true }}
+                                    name="trxtext"
+                                />
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    variant="contained"
+                                    size="large"
+                                    color="primary"
+                                    onClick={buyTRCwithTRX}
+                                >
+                                    Buy with TRX
                                 </Button>
                             </Grid>
                         </Grid>

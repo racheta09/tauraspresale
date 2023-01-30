@@ -23,13 +23,25 @@ import Aggregator from "../assests/json/AggregatorV3Interface.json"
 import { PresaleContent } from "./PresaleContent"
 import Image from "next/image.js"
 
-let web3, taurasseller, busdContract, aggregator
+let web3,
+    trcseller,
+    busdContract,
+    usdtContract,
+    trxContract,
+    bnbAggregator,
+    trxAggregator
 export const Presale = () => {
-    const activeNetwork = 56 // 97
-    const busdAddress = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
-    const aggregatorAddress = "0x87Ea38c9F24264Ec1Fff41B04ec94a97Caf99941"
-    // const busdAddress = "0xE0dFffc2E01A7f051069649aD4eb3F518430B6a4" // testnet
-    // const aggregatorAddress = "0x0630521aC362bc7A19a4eE44b57cE72Ea34AD01c" //testnet
+    const activeNetwork = 97 // 56
+    // const busdAddress = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
+    // const usdtAddress = "0x55d398326f99059fF775485246999027B3197955"
+    // const trxAddress = "0x85EAC5Ac2F758618dFa09bDbe0cf174e7d574D5B"
+    // const bnbAggregatorAddress = "0x87Ea38c9F24264Ec1Fff41B04ec94a97Caf99941"
+    // const trxAggregatorAddress = "0xF4C5e535756D11994fCBB12Ba8adD0192D9b88be"
+    const busdAddress = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee" // testnet
+    const usdtAddress = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee" // testnet
+    const trxAddress = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee" // testnet
+    const bnbAggregatorAddress = "0x0630521aC362bc7A19a4eE44b57cE72Ea34AD01c" //testnet
+    const trxAggregatorAddress = "0x135deD16bFFEB51E01afab45362D3C4be31AA2B0" //testnet
 
     const [account, setAccount] = useState(0)
     const [chainID, setChainID] = useState(0)
@@ -37,13 +49,20 @@ export const Presale = () => {
     const [end, setEnd] = useState(false)
     const [bnbbal, setBnbbal] = useState(0)
     const [busdbal, setBusdbal] = useState(0)
+    const [usdtbal, setUsdtbal] = useState(0)
+    const [trxbal, setTrxbal] = useState(0)
     const [bnbtext, setBnbtext] = useState(0)
     const [busdtext, setBusdtext] = useState(0)
+    const [usdttext, setUsdttext] = useState(0)
+    const [trxtext, setTrxtext] = useState(0)
     const [txhash, setTxhash] = useState(0)
     const [error, setError] = useState(false)
     const [bnbusd, setBnbusd] = useState(0)
+    const [trxusd, setTrxusd] = useState(0)
     const [trcbnb, setTRCbnb] = useState(0)
     const [trcbusd, setTRCbusd] = useState(0)
+    const [trcusdt, setTRCusdt] = useState(0)
+    const [trctrx, setTRCtrx] = useState(0)
     const [rate, setRate] = useState(0)
     const [remainingtokens, setRemainingtokens] = useState(0)
     const [isWalletInstalled, setIsWalletInstalled] = useState(false)
@@ -60,16 +79,27 @@ export const Presale = () => {
         sold,
         bnbbal,
         busdbal,
+        usdtbal,
+        trxbal,
         error,
         trcbnb,
         trcbusd,
+        trcusdt,
+        trctrx,
         bnbusd,
+        trxusd,
         bnbtext,
         busdtext,
+        usdttext,
+        trxtext,
         bnbChange,
         busdChange,
+        usdtChange,
+        trxChange,
         buyTRCwithBNB,
         buyTRCwithBUSD,
+        buyTRCwithUSDT,
+        buyTRCwithTRX,
         txhash,
         remainingtokens,
     }
@@ -109,42 +139,68 @@ export const Presale = () => {
             10 ** 18
         console.log(busdBalance)
         setBusdbal(busdBalance.toFixed(4))
-        taurasseller = new web3.eth.Contract(
+        usdtContract = new web3.eth.Contract(ERC20.abi, usdtAddress)
+        let usdtBalance =
+            (await usdtContract.methods.balanceOf(accounts[0]).call()) /
+            10 ** 18
+        console.log(usdtBalance)
+        setUsdtbal(usdtBalance.toFixed(4))
+        trxContract = new web3.eth.Contract(ERC20.abi, trxAddress)
+        let trxBalance =
+            (await trxContract.methods.balanceOf(accounts[0]).call()) / 10 ** 18
+        console.log(trxBalance)
+        setTrxbal(trxBalance.toFixed(4))
+        trcseller = new web3.eth.Contract(
             TaurasSeller.abi,
             TaurasSeller.networks[activeNetwork].address
         )
-        let tokensSold = await taurasseller.methods.tokensSold().call()
+        let tokensSold = await trcseller.methods.tokensSold().call()
         setSold(parseFloat(tokensSold) * 10 ** -18)
-        let ended = await taurasseller.methods.saleEnded().call()
+        let ended = await trcseller.methods.saleEnded().call()
         setEnd(ended)
-        let _rate = await taurasseller.methods.rate().call()
+        let _rate = await trcseller.methods.rate().call()
         setRate(_rate)
-        let _remainingtokens = await taurasseller.methods.remainingTokens().call()
+        let _remainingtokens = await trcseller.methods.remainingTokens().call()
         setRemainingtokens(_remainingtokens * 10 ** -18)
         console.log(remainingtokens)
         console.log(tokensSold, ended, rate)
-        aggregator = new web3.eth.Contract(Aggregator.abi, aggregatorAddress)
-        let bprice = await aggregator.methods.latestAnswer().call()
+        bnbAggregator = new web3.eth.Contract(
+            Aggregator.abi,
+            bnbAggregatorAddress
+        )
+        trxAggregator = new web3.eth.Contract(
+            Aggregator.abi,
+            trxAggregatorAddress
+        )
+        let bprice = await bnbAggregator.methods.latestAnswer().call()
         setBnbusd((1 / (bprice * 10 ** -18)).toFixed(4))
         console.log((1 / (bprice * 10 ** -18)).toFixed(4))
-        // let bprice = await fetch(
-        //     'https://api.coingecko.com/api/v3/coins/binancecoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false',
-        // )
-        // let bnbprice = await bprice.json()
-        // console.log(bnbprice.market_data.current_price.usd)
-        // setBnbusd(bnbprice.market_data.current_price.usd)
+        let tprice = await trxAggregator.methods.latestAnswer().call()
+        setTrxusd((tprice * 10 ** -8).toFixed(4))
+        console.log((tprice * 10 ** -8).toFixed(4))
     }
 
     function bnbChange(event) {
         let value = event.target.value
         setBnbtext(value)
-        setTRCbnb(millify(value * rate))
+        setTRCbnb(millify((value * bnbusd) / (rate / 100)))
     }
 
     function busdChange(event) {
         let value = event.target.value
         setBusdtext(value)
-        setTRCbusd(millify((value / bnbusd) * rate))
+        setTRCbusd(millify(value / (rate / 100)))
+    }
+
+    function usdtChange(event) {
+        let value = event.target.value
+        setUsdttext(value)
+        setTRCusdt(millify(value / (rate / 100)))
+    }
+    function trxChange(event) {
+        let value = event.target.value
+        setTrxtext(value)
+        setTRCtrx(millify((value * trxusd) / (rate / 100)))
     }
 
     async function buyTRCwithBNB() {
@@ -152,7 +208,7 @@ export const Presale = () => {
             if (bnbtext === 0) {
                 throw new Error({ message: "Cannot Buy 0 TRC" })
             }
-            let sold = await taurasseller.methods.buyTRCwithBNB().send({
+            let sold = await trcseller.methods.buyTauraswithBNB().send({
                 from: account,
                 value: web3.utils.toWei(bnbtext.toString()),
                 gas: "300000",
@@ -174,15 +230,18 @@ export const Presale = () => {
                 throw new Error({ message: "Cannot Buy 0 TRC" })
             }
             let allowed = await busdContract.methods
-                .allowance(account, TaurasSeller.networks[activeNetwork].address)
+                .allowance(
+                    account,
+                    TaurasSeller.networks[activeNetwork].address
+                )
                 .call()
             // console.log((web3.utils.fromWei(allowed) * 10 ** 18) >= parseInt(web3.utils.toWei(busdtext.toString())))
             if (
                 web3.utils.fromWei(allowed) * 10 ** 18 >=
                 parseInt(web3.utils.toWei(busdtext.toString()))
             ) {
-                let sold = await taurasseller.methods
-                    .buyTRCwithBUSD(web3.utils.toWei(busdtext.toString()))
+                let sold = await trcseller.methods
+                    .buyTauraswithBUSD(web3.utils.toWei(busdtext.toString()))
                     .send({
                         from: account,
                         gas: "300000",
@@ -203,6 +262,96 @@ export const Presale = () => {
                 setTxhash(approved["transactionHash"])
                 console.log(txhash)
                 await buyTRCwithBUSD()
+            }
+        } catch (error) {
+            setError(error)
+            console.error(error)
+        }
+    }
+
+    async function buyTRCwithUSDT() {
+        try {
+            if (usdttext === 0) {
+                throw new Error({ message: "Cannot Buy 0 TRC" })
+            }
+            let allowed = await usdtContract.methods
+                .allowance(
+                    account,
+                    TaurasSeller.networks[activeNetwork].address
+                )
+                .call()
+            // console.log((web3.utils.fromWei(allowed) * 10 ** 18) >= parseInt(web3.utils.toWei(usdttext.toString())))
+            if (
+                web3.utils.fromWei(allowed) * 10 ** 18 >=
+                parseInt(web3.utils.toWei(usdttext.toString()))
+            ) {
+                let sold = await trcseller.methods
+                    .buyTauraswithUSDT(web3.utils.toWei(usdttext.toString()))
+                    .send({
+                        from: account,
+                        gas: "300000",
+                        gasPrice: "10000000000",
+                    })
+                setError(false)
+                setTxhash(sold["transactionHash"])
+                console.log(txhash)
+                await getAccount()
+            } else {
+                let approved = await usdtContract.methods
+                    .approve(
+                        TaurasSeller.networks[activeNetwork].address,
+                        web3.utils.toWei(usdttext.toString())
+                    )
+                    .send({ from: account })
+                setError({ message: "USDT Approved Successfully" })
+                setTxhash(approved["transactionHash"])
+                console.log(txhash)
+                await buyTRCwithUSDT()
+            }
+        } catch (error) {
+            setError(error)
+            console.error(error)
+        }
+    }
+
+    async function buyTRCwithTRX() {
+        try {
+            if (trxtext === 0) {
+                throw new Error({ message: "Cannot Buy 0 TRC" })
+            }
+            let allowed = await trxContract.methods
+                .allowance(
+                    account,
+                    TaurasSeller.networks[activeNetwork].address
+                )
+                .call()
+            // console.log((web3.utils.fromWei(allowed) * 10 ** 18) >= parseInt(web3.utils.toWei(trxtext.toString())))
+            if (
+                web3.utils.fromWei(allowed) * 10 ** 18 >=
+                parseInt(web3.utils.toWei(trxtext.toString()))
+            ) {
+                let sold = await trcseller.methods
+                    .buyTauraswithTRX(web3.utils.toWei(trxtext.toString()))
+                    .send({
+                        from: account,
+                        gas: "300000",
+                        gasPrice: "10000000000",
+                    })
+                setError(false)
+                setTxhash(sold["transactionHash"])
+                console.log(txhash)
+                await getAccount()
+            } else {
+                let approved = await trxContract.methods
+                    .approve(
+                        TaurasSeller.networks[activeNetwork].address,
+                        web3.utils.toWei(trxtext.toString())
+                    )
+                    .send({ from: account })
+                setError({ message: "TRX Approved Successfully" })
+                setTxhash(approved["transactionHash"])
+                console.log(txhash)
+                await buyTRCwithTRX()
             }
         } catch (error) {
             setError(error)
@@ -263,7 +412,7 @@ export const Presale = () => {
             <Button
                 onClick={addtrctoken}
                 startIcon={
-                    <Image src="/logo.png" alt="logo" width="32" height="32"/>
+                    <Image src="/logo.png" alt="logo" width="32" height="32" />
                 }
             >
                 Add TRC to Metamask
@@ -309,14 +458,15 @@ export const Presale = () => {
                     padding: "1rem",
                     margin: "1rem",
                     borderRadius: "0.5rem",
-                    backgroundColor: "rgba(12,12,12,0.5)",
+                    // backgroundColor: "rgba(12,12,12,0.5)",
+                    backgroundColor: "rgb(4, 30, 55, 0.5)",
                     textAlign: "center",
                     color: "white",
                     fontSize: "1.5rem",
                     fontWeight: "bold",
                     letterSpacing: "0.1rem",
                     border: "1px solid rgba(0,0,0,0.1)",
-                    boxShadow: "0px 0px 10px rgba(238,45,15,0.1)",
+                    boxShadow: "0px 0px 10px #1f466a",
                 }}
             >
                 <h1>Private Sale</h1>
@@ -334,7 +484,12 @@ export const Presale = () => {
                             padding: "20px",
                         }}
                     >
-                        <Image src="/logo.png" alt="logo" width="200" height="200"/>
+                        <Image
+                            src="/logo.png"
+                            alt="logo"
+                            width="200"
+                            height="200"
+                        />
                         <Typography variant="h4">Token Sale is Live</Typography>
                         <Typography variant="h5">0.06USDT/TRC</Typography>
                     </Grid>
