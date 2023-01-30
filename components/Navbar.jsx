@@ -19,11 +19,15 @@ export const Navbar = () => {
     const pages = [
         {
             text: "Telegram",
-            link: "https://t.me/caishenkinfinance",
+            link: "https://t.me/taurascoinglobalchat",
         },
         {
             text: "Twitter",
-            link: "https://twitter.com/CaishkinFinance",
+            link: "https://twitter.com/tauras_official",
+        },
+        {
+            text: "Medium",
+            link: "https://medium.com/@taurassocial",
         },
     ]
 
@@ -39,9 +43,9 @@ export const Navbar = () => {
         <AppBar position="static" color="transparent">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <a href="https://caishenkin.finance">
+                    <a href="https://taurascoin.io/">
                         <Image
-                            src="/cknlogo.png"
+                            src="/logo.png"
                             alt="logo"
                             width="64"
                             height="64"

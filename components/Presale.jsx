@@ -16,14 +16,14 @@ import millify from "millify"
 import MetamaskSVG from "../assests/MetamaskSVG.js"
 import BscSVG from "../assests/BscSVG.js"
 
-import CKNSeller from "../assests/json/CKNSeller.json"
+import TaurasSeller from "../assests/json/TaurasSeller.json"
 import ERC20 from "../assests/json/IERC20.json"
 import Aggregator from "../assests/json/AggregatorV3Interface.json"
 
 import { PresaleContent } from "./PresaleContent"
 import Image from "next/image.js"
 
-let web3, cknseller, busdContract, aggregator
+let web3, taurasseller, busdContract, aggregator
 export const Presale = () => {
     const activeNetwork = 56 // 97
     const busdAddress = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
@@ -42,8 +42,8 @@ export const Presale = () => {
     const [txhash, setTxhash] = useState(0)
     const [error, setError] = useState(false)
     const [bnbusd, setBnbusd] = useState(0)
-    const [cknbnb, setCKNbnb] = useState(0)
-    const [cknbusd, setCKNbusd] = useState(0)
+    const [trcbnb, setTRCbnb] = useState(0)
+    const [trcbusd, setTRCbusd] = useState(0)
     const [rate, setRate] = useState(0)
     const [remainingtokens, setRemainingtokens] = useState(0)
     const [isWalletInstalled, setIsWalletInstalled] = useState(false)
@@ -61,15 +61,15 @@ export const Presale = () => {
         bnbbal,
         busdbal,
         error,
-        cknbnb,
-        cknbusd,
+        trcbnb,
+        trcbusd,
         bnbusd,
         bnbtext,
         busdtext,
         bnbChange,
         busdChange,
-        buyCKNwithBNB,
-        buyCKNwithBUSD,
+        buyTRCwithBNB,
+        buyTRCwithBUSD,
         txhash,
         remainingtokens,
     }
@@ -109,17 +109,17 @@ export const Presale = () => {
             10 ** 18
         console.log(busdBalance)
         setBusdbal(busdBalance.toFixed(4))
-        cknseller = new web3.eth.Contract(
-            CKNSeller.abi,
-            CKNSeller.networks[activeNetwork].address
+        taurasseller = new web3.eth.Contract(
+            TaurasSeller.abi,
+            TaurasSeller.networks[activeNetwork].address
         )
-        let tokensSold = await cknseller.methods.tokensSold().call()
+        let tokensSold = await taurasseller.methods.tokensSold().call()
         setSold(parseFloat(tokensSold) * 10 ** -18)
-        let ended = await cknseller.methods.saleEnded().call()
+        let ended = await taurasseller.methods.saleEnded().call()
         setEnd(ended)
-        let _rate = await cknseller.methods.rate().call()
+        let _rate = await taurasseller.methods.rate().call()
         setRate(_rate)
-        let _remainingtokens = await cknseller.methods.remainingTokens().call()
+        let _remainingtokens = await taurasseller.methods.remainingTokens().call()
         setRemainingtokens(_remainingtokens * 10 ** -18)
         console.log(remainingtokens)
         console.log(tokensSold, ended, rate)
@@ -138,21 +138,21 @@ export const Presale = () => {
     function bnbChange(event) {
         let value = event.target.value
         setBnbtext(value)
-        setCKNbnb(millify(value * rate))
+        setTRCbnb(millify(value * rate))
     }
 
     function busdChange(event) {
         let value = event.target.value
         setBusdtext(value)
-        setCKNbusd(millify((value / bnbusd) * rate))
+        setTRCbusd(millify((value / bnbusd) * rate))
     }
 
-    async function buyCKNwithBNB() {
+    async function buyTRCwithBNB() {
         try {
             if (bnbtext === 0) {
-                throw new Error({ message: "Cannot Buy 0 CKN" })
+                throw new Error({ message: "Cannot Buy 0 TRC" })
             }
-            let sold = await cknseller.methods.buyCKNwithBNB().send({
+            let sold = await taurasseller.methods.buyTRCwithBNB().send({
                 from: account,
                 value: web3.utils.toWei(bnbtext.toString()),
                 gas: "300000",
@@ -168,21 +168,21 @@ export const Presale = () => {
         }
     }
 
-    async function buyCKNwithBUSD() {
+    async function buyTRCwithBUSD() {
         try {
             if (busdtext === 0) {
-                throw new Error({ message: "Cannot Buy 0 CKN" })
+                throw new Error({ message: "Cannot Buy 0 TRC" })
             }
             let allowed = await busdContract.methods
-                .allowance(account, CKNSeller.networks[activeNetwork].address)
+                .allowance(account, TaurasSeller.networks[activeNetwork].address)
                 .call()
             // console.log((web3.utils.fromWei(allowed) * 10 ** 18) >= parseInt(web3.utils.toWei(busdtext.toString())))
             if (
                 web3.utils.fromWei(allowed) * 10 ** 18 >=
                 parseInt(web3.utils.toWei(busdtext.toString()))
             ) {
-                let sold = await cknseller.methods
-                    .buyCKNwithBUSD(web3.utils.toWei(busdtext.toString()))
+                let sold = await taurasseller.methods
+                    .buyTRCwithBUSD(web3.utils.toWei(busdtext.toString()))
                     .send({
                         from: account,
                         gas: "300000",
@@ -195,14 +195,14 @@ export const Presale = () => {
             } else {
                 let approved = await busdContract.methods
                     .approve(
-                        CKNSeller.networks[activeNetwork].address,
+                        TaurasSeller.networks[activeNetwork].address,
                         web3.utils.toWei(busdtext.toString())
                     )
                     .send({ from: account })
                 setError({ message: "BUSD Approved Successfully" })
                 setTxhash(approved["transactionHash"])
                 console.log(txhash)
-                await buyCKNwithBUSD()
+                await buyTRCwithBUSD()
             }
         } catch (error) {
             setError(error)
@@ -210,12 +210,12 @@ export const Presale = () => {
         }
     }
 
-    async function addckntoken() {
-        const tokenAddress = "0x95ac4ffA46C25dBCe18C53F5EdAf088b53c160D1"
-        const tokenSymbol = "CKN"
+    async function addtrctoken() {
+        const tokenAddress = "0xc67e20354aae72f669cde0a66c37c1c5cc0dd752"
+        const tokenSymbol = "TRC"
         const tokenDecimals = 18
         const tokenImage =
-            "https://caishenkin.finance/wp-content/uploads/2022/10/cropped-msg1292313701-28304-removebg-preview.png"
+            "https://taurascoin.io/dashboard/data/images/logo.png"
 
         try {
             // wasAdded is a boolean. Like any RPC method, an error may be thrown.
@@ -261,12 +261,12 @@ export const Presale = () => {
                 Binance Chain Wallet
             </Button>
             <Button
-                onClick={addckntoken}
+                onClick={addtrctoken}
                 startIcon={
-                    <Image src="/cknlogo.png" alt="CKN Logo" width="32" height="32"/>
+                    <Image src="/logo.png" alt="logo" width="32" height="32"/>
                 }
             >
-                Add CKN to Metamask
+                Add TRC to Metamask
             </Button>
         </ButtonGroup>
     )
@@ -334,9 +334,9 @@ export const Presale = () => {
                             padding: "20px",
                         }}
                     >
-                        <Image src="/cknlogo.png" alt="cknlogo" width="200" height="200"/>
+                        <Image src="/logo.png" alt="logo" width="200" height="200"/>
                         <Typography variant="h4">Token Sale is Live</Typography>
-                        <Typography variant="h5">10,000,000 CKN/BNB</Typography>
+                        <Typography variant="h5">0.06USDT/TRC</Typography>
                     </Grid>
                     <Grid item sm={12} lg={6}>
                         {isWalletInstalled ? (
@@ -355,7 +355,7 @@ export const Presale = () => {
                         <Box mt={3}>
                             Contract Address to add to the wallet <br />{" "}
                             <code>
-                                0x95ac4ffA46C25dBCe18C53F5EdAf088b53c160D1
+                                0xc67e20354aae72f669cde0a66c37c1c5cc0dd752
                             </code>
                         </Box>
                     </Grid>

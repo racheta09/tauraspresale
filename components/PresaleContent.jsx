@@ -17,15 +17,15 @@ export const PresaleContent = ({
     bnbbal,
     busdbal,
     error,
-    cknbnb,
-    cknbusd,
+    trcbnb,
+    trcbusd,
     bnbusd,
     bnbtext,
     busdtext,
     bnbChange,
     busdChange,
-    buyCKNwithBNB,
-    buyCKNwithBUSD,
+    buyTRCwithBNB,
+    buyTRCwithBUSD,
     txhash,
     remainingtokens,
 }) => {
@@ -77,17 +77,18 @@ export const PresaleContent = ({
                                     color="success"
                                 />
                                 <h4 style={{ color: "black" }}>
-                                    {millify(sold)} CKN Sold
+                                    {millify(sold)} TRC Sold
                                 </h4>
                             </Grid>
                         ) : (
                             ""
                         )}
                         <Grid item>Current BNB/USD Price: ${bnbusd}</Grid>
+                        <Grid item>Current TRX/USD Price: ${bnbusd}</Grid>
                         <Grid item>
-                            Balance: {bnbbal} BNB / {busdbal} BUSD
+                            Balance: {bnbbal} BNB / {busdbal} BUSD / {busdbal} USDT / {busdbal} TRX
                         </Grid>
-                        <Grid item>1 BNB = 10,000,000 CKN</Grid>
+                        <Grid item>0.06 USDT = 1 TRC</Grid>
                     </Grid>
                     <Grid
                         container
@@ -112,7 +113,7 @@ export const PresaleContent = ({
                                     width="100"
                                 />
                             </Grid>
-                            <Grid item>{cknbnb} CKN</Grid>
+                            <Grid item>{trcbnb} TRC</Grid>
                             <Grid item>
                                 <TextField
                                     id="outlined-number"
@@ -130,7 +131,7 @@ export const PresaleContent = ({
                                     variant="contained"
                                     size="large"
                                     color="primary"
-                                    onClick={buyCKNwithBNB}
+                                    onClick={buyTRCwithBNB}
                                 >
                                     Buy with BNB
                                 </Button>
@@ -153,7 +154,7 @@ export const PresaleContent = ({
                                     width="100"
                                 />
                             </Grid>
-                            <Grid item>{cknbusd} CKN</Grid>
+                            <Grid item>{trcbusd} TRC</Grid>
                             <Grid item>
                                 <TextField
                                     id="outlined-number"
@@ -171,7 +172,7 @@ export const PresaleContent = ({
                                     variant="contained"
                                     size="large"
                                     color="primary"
-                                    onClick={buyCKNwithBUSD}
+                                    onClick={buyTRCwithBUSD}
                                 >
                                     Buy with BUSD
                                 </Button>
@@ -200,7 +201,7 @@ export const PresaleContent = ({
                                 </Alert>
                             ) : txhash !== 0 ? (
                                 <Alert severity="success">
-                                    Bought CKN Successfully,{" "}
+                                    Bought TRC Successfully,{" "}
                                     <a
                                         href={
                                             "https://bscscan.com/tx/" + txhash

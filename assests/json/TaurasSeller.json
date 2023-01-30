@@ -226,6 +226,9 @@
     "networks": {
         "56": {
             "address": "0x0E5fEe88B5647b737b6ec408b4f42aa1f55d4e79"
+        },
+        "97": {
+            "address": ""
         }
     }
 }
