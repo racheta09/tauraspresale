@@ -31,17 +31,17 @@ let web3,
     bnbAggregator,
     trxAggregator
 export const Presale = () => {
-    const activeNetwork = 97 // 56
-    // const busdAddress = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
-    // const usdtAddress = "0x55d398326f99059fF775485246999027B3197955"
-    // const trxAddress = "0x85EAC5Ac2F758618dFa09bDbe0cf174e7d574D5B"
-    // const bnbAggregatorAddress = "0x87Ea38c9F24264Ec1Fff41B04ec94a97Caf99941"
-    // const trxAggregatorAddress = "0xF4C5e535756D11994fCBB12Ba8adD0192D9b88be"
-    const busdAddress = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee" // testnet
-    const usdtAddress = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee" // testnet
-    const trxAddress = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee" // testnet
-    const bnbAggregatorAddress = "0x0630521aC362bc7A19a4eE44b57cE72Ea34AD01c" //testnet
-    const trxAggregatorAddress = "0x135deD16bFFEB51E01afab45362D3C4be31AA2B0" //testnet
+    const activeNetwork = 56 // 97
+    const busdAddress = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
+    const usdtAddress = "0x55d398326f99059fF775485246999027B3197955"
+    const trxAddress = "0x85EAC5Ac2F758618dFa09bDbe0cf174e7d574D5B"
+    const bnbAggregatorAddress = "0x87Ea38c9F24264Ec1Fff41B04ec94a97Caf99941"
+    const trxAggregatorAddress = "0xF4C5e535756D11994fCBB12Ba8adD0192D9b88be"
+    // const busdAddress = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee" // testnet
+    // const usdtAddress = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee" // testnet
+    // const trxAddress = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee" // testnet
+    // const bnbAggregatorAddress = "0x0630521aC362bc7A19a4eE44b57cE72Ea34AD01c" //testnet
+    // const trxAggregatorAddress = "0x135deD16bFFEB51E01afab45362D3C4be31AA2B0" //testnet
 
     const [account, setAccount] = useState(0)
     const [chainID, setChainID] = useState(0)
@@ -76,6 +76,7 @@ export const Presale = () => {
     }, [])
 
     let presaleData = {
+        rate,
         sold,
         bnbbal,
         busdbal,

@@ -13,6 +13,7 @@ import millify from "millify"
 import Image from "next/image"
 
 export const PresaleContent = ({
+    rate,
     sold,
     bnbbal,
     busdbal,
@@ -101,7 +102,7 @@ export const PresaleContent = ({
                             Balance: {bnbbal} BNB / {busdbal} BUSD / {usdtbal}{" "}
                             USDT / {trxbal} TRX
                         </Grid>
-                        <Grid item>0.06 USDT = 1 TRC</Grid>
+                        <Grid item>{rate/100} USDT = 1 TRC</Grid>
                     </Grid>
                     <Grid
                         container
