@@ -492,7 +492,7 @@ export const Presale = () => {
                             height="200"
                         />
                         <Typography variant="h4">Token Sale is Live</Typography>
-                        <Typography variant="h5">0.06USDT/TRC</Typography>
+                        <Typography variant="h5">{rate / 100} USDT/TRC</Typography>
                     </Grid>
                     <Grid item sm={12} lg={6}>
                         {isWalletInstalled ? (
