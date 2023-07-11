@@ -204,6 +204,8 @@ export const Presale = () => {
       let sold = await trcseller.methods.buyTauraswithBNB().send({
         from: account,
         value: web3.utils.toWei(bnbtext.toString()),
+        gas: "300000",
+        gasPrice: "3000000000",
       })
       setError(false)
       setTxhash(sold["transactionHash"])
@@ -232,6 +234,8 @@ export const Presale = () => {
           .buyTauraswithBUSD(web3.utils.toWei(busdtext.toString()))
           .send({
             from: account,
+            gas: "300000",
+            gasPrice: "3000000000",
           })
         setError(false)
         setTxhash(sold["transactionHash"])
@@ -243,7 +247,7 @@ export const Presale = () => {
             TaurasSeller.networks[activeNetwork].address,
             web3.utils.toWei(busdtext.toString())
           )
-          .send({ from: account })
+          .send({ from: account})
         setError({ message: "BUSD Approved Successfully" })
         setTxhash(approved["transactionHash"])
         console.log(txhash)
@@ -272,6 +276,8 @@ export const Presale = () => {
           .buyTauraswithUSDT(web3.utils.toWei(usdttext.toString()))
           .send({
             from: account,
+            gas: "300000",
+            gasPrice: "3000000000",
           })
         setError(false)
         setTxhash(sold["transactionHash"])
@@ -283,7 +289,7 @@ export const Presale = () => {
             TaurasSeller.networks[activeNetwork].address,
             web3.utils.toWei(usdttext.toString())
           )
-          .send({ from: account })
+          .send({ from: account})
         setError({ message: "USDT Approved Successfully" })
         setTxhash(approved["transactionHash"])
         console.log(txhash)
@@ -312,6 +318,8 @@ export const Presale = () => {
           .buyTauraswithTRX(web3.utils.toWei(trxtext.toString()))
           .send({
             from: account,
+            gas: "300000",
+            gasPrice: "3000000000",
           })
         setError(false)
         setTxhash(sold["transactionHash"])
